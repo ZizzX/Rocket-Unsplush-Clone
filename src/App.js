@@ -1,23 +1,67 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect, useCallback } from "react";
+import { api } from "./apiUnsplush";
+import "./App.css";
+import Loader from './Components/loader/Loader';
+import Header from './Components/header/Header';
 
 function App() {
+  const [photosData, setPhotosData] = useState({
+    photos: [],
+    page: 1,
+    perPage: 14,
+    isLoading: false,
+  });
+
+  const getPhotos = useCallback((page, perPage) => {
+    api.photos.list({ page: page, perPage: perPage }).then((data) => {
+      if (data) {
+        let paginatedData = data.response.results;
+        setPhotosData((prev) => ({
+          ...prev,
+          photos:
+            page === 1
+              ? [...paginatedData]
+              : prev.photos.concat([...paginatedData]),
+          isLoading: false,
+        }));
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    getPhotos(1, 14);
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.addEventListener("scroll", handleScroll);
+    };
+  }, [getPhotos]);
+
+  const handleScroll = () => {
+    if (
+      window.innerHeight + window.scrollY >= document.body.offsetHeight + 300 &&
+      !photosData.isLoading
+    ) {
+      setPhotosData((prev) => ({
+        ...prev,
+        page: prev.page + 1,
+        isLoading: true,
+      }));
+      getPhotos(photosData.page + 1, 14);
+    }
+  };
+
+  const {photos, isLoading} = photosData;
+
+  let loader;
+
+  if (photos.length < 0 || isLoading) {
+    loader = <Loader/>
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header/>
+      {loader}
     </div>
   );
 }
