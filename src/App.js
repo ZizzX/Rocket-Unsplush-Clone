@@ -1,8 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { api } from "./apiUnsplush";
-import "./App.css";
 import Loader from './Components/loader/Loader';
 import Header from './Components/header/Header';
+
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faHeart, faHistory } from '@fortawesome/free-solid-svg-icons'
+
+library.add(faHeart, faHistory);
 
 function App() {
   const [photosData, setPhotosData] = useState({
@@ -11,6 +16,13 @@ function App() {
     perPage: 14,
     isLoading: false,
   });
+
+  
+  const [searchResults, setSearchResults] = useState([]);
+
+  const onSearchInput = useCallback((term) => {
+    setSearchResults(term)
+  }, [searchResults]);
 
   const getPhotos = useCallback((page, perPage) => {
     api.photos.list({ page: page, perPage: perPage }).then((data) => {
@@ -34,7 +46,8 @@ function App() {
     return () => {
       window.addEventListener("scroll", handleScroll);
     };
-  }, [getPhotos]);
+  });
+
 
   const handleScroll = () => {
     if (
@@ -60,7 +73,7 @@ function App() {
 
   return (
     <div className="App">
-      <Header/>
+      <Header search={onSearchInput} />
       {loader}
     </div>
   );
