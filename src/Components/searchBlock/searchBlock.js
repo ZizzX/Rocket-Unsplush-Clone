@@ -1,16 +1,24 @@
-import React, { useState, useEffect, useCallback} from "react";
-import { Row, Col } from "react-bootstrap";
-import styled from "styled-components";
+import React, { useState, useEffect, useCallback } from "react";
+import styled, { keyframes } from "styled-components";
+import SearchBlockResult from "./searchresult";
+import { Grid } from "@material-ui/core";
+import FadeIn from "../fadeIn";
 
 const SearchForm = styled.form`
   width: 100%;
-  margin: 40px 0px 0px 0px;
+  position: relative;
+  overflow: hidden;
+  /* margin: 40px 0px 0px 0px; */
+  padding: 78px 0 91px 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  & > div {
+  transition: all 0.5s ease-in-out;
+  & .search-line {
+    overflow: hidden;
     width: 100%;
-    height: 1px;
+    margin-bottom: 30px;
+    height: 2px;
     background: rgb(0, 0, 0);
     background: linear-gradient(
       90deg,
@@ -39,32 +47,34 @@ const SearchInput = styled.input`
 `;
 
 const SearchBlock = (props) => {
-    const { onSearch } = props;
-    const [searchTerm, setSearchTerm] = useState('');
-    // const [searchResults, setSearchResults] = useState([]);
+  const { onSearch, searchResults } = props;
+  const [searchTerm, setSearchTerm] = useState("");
 
-    const handleChange = useCallback((e) => {
-        setSearchTerm(e.target.value);
-    }, [searchTerm])
+  const handleChange = useCallback(
+    (e) => {
+      setSearchTerm(e.target.value);
+    },
+    [searchTerm]
+  );
 
-    useEffect(() => {
-        const result = searchTerm.toLowerCase();
-        onSearch(result);
-    }, [searchTerm])
+  const onSubmitSearch = (e) => {
+    e.preventDefault();
+    onSearch(searchTerm);
+  };
 
   return (
-    <Row className="justify-content-md-center">
-      <Col md={10} sm={12}>
-        <SearchForm>
-          <SearchInput 
-            type="text" 
-            placeholder="Поиск" 
-            value={searchTerm}  
-            onChange={ handleChange } />
-          <div />
-        </SearchForm>
-      </Col>
-    </Row>
+    <Grid container direction="row" justify="center" alignItems="center">
+      <SearchForm onSubmit={onSubmitSearch}>
+        <SearchInput
+          type="text"
+          placeholder="Поиск"
+          value={searchTerm}
+          onChange={handleChange}
+        />
+        <div className="search-line" />
+        <SearchBlockResult wrap="nowrap" searchResult={searchResults} />
+      </SearchForm>
+    </Grid>
   );
 };
 
