@@ -5,9 +5,13 @@ import Loader from "./Components/loader/Loader";
 import Header from "./Components/header/Header";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faHeart, faHistory } from "@fortawesome/free-solid-svg-icons";
+import {
+  faHeart,
+  faHistory,
+  faSearch
+} from "@fortawesome/free-solid-svg-icons";
 
-library.add(faHeart, faHistory);
+library.add(faHeart, faHistory, faSearch);
 
 function App() {
   const [photosData, setPhotosData] = useState({

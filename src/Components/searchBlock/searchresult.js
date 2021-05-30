@@ -7,10 +7,27 @@ const SearchResultBlock = styled.div`
   flex-wrap: ${(props) => props.wrap || "no-wrap"};
   height: 21px;
   width: 90%;
-  background: linear-gradient(90deg, #000 0%, #000 50%);
   overflow: hidden;
+  position: relative;
   & > span {
     margin: 0 5px;
+    font-size: 18px;
+    line-height: 21px;
+    text-align: center;
+  }
+  &:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      transparent 50%,
+      #000 100%
+    );
   }
 `;
 

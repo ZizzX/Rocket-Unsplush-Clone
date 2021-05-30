@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Container, Collapse } from "@material-ui/core";
 import SearchBlock from "../searchBlock/searchBlock";
-import FadeIn from "../fadeIn";
+// import FadeIn from "../fadeIn";
 
 import { Flex } from "../flex";
 
@@ -37,6 +37,21 @@ const HeaderItem = styled.div`
   & > span {
     margin: 0 0 0 10px;
     font-size: 18px;
+    position: relative;
+    &:after {
+      content: "";
+      position: absolute;
+      bottom: -10px;
+      right: 0;
+      width: 0px;
+      height: 0px;
+      background-color: #ffffff;
+      transition: width 0.1s ease-in-out 0.1s, height 0.1s ease-in-out;
+    }
+  }
+  &:hover > span:after {
+    width: 30px;
+    height: 3px;
   }
 `;
 
@@ -55,6 +70,12 @@ export default function Header(props) {
           <div>
             <nav>
               <Flex>
+                <Collapse in={!showSearchBlock} timeout="auto" unmountOnExit>
+                  <HeaderItem>
+                    <FontAwesomeIcon icon="search" size="1x" />
+                    <span>Поиск</span>
+                  </HeaderItem>
+                </Collapse>
                 <HeaderItem>
                   <FontAwesomeIcon icon="heart" size="1x" />
                   <span>Избранное</span>
@@ -68,12 +89,7 @@ export default function Header(props) {
           </div>
         </Flex>
       </Container>
-      <Collapse
-        in={showSearchBlock}
-        children={SearchBlock}
-        timeout="auto"
-        unmountOnExit
-      >
+      <Collapse in={showSearchBlock} timeout="auto" unmountOnExit>
         <SearchBlock onSearch={search} searchResults={searchResults} />
       </Collapse>
     </HeaderBlock>

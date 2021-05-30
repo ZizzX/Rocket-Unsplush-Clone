@@ -60,6 +60,7 @@ const SearchBlock = (props) => {
   const onSubmitSearch = (e) => {
     e.preventDefault();
     onSearch(searchTerm);
+    setSearchTerm("");
   };
 
   return (
